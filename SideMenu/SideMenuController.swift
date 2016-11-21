@@ -13,16 +13,23 @@ public class SideMenuController: UIViewController {
     // MARK: - Public Properties
     
     /// What width will be side menu relative to SideMenuController view width.
-    public var menuWidthRatio           : CGFloat = 0.8
+    public var menuWidthRatio: CGFloat = 0.8
     
     /// Minimum velocity to open or close side menu.
-    public var minimumXVelocity         : CGFloat = 1000
+    public var minimumXVelocity: CGFloat = 1000
     
     /// Minimum translation to open or close side menu relative to SideMenuController view width.
-    public var minimumXTranslationRatio : CGFloat = 0.3
+    public var minimumXTranslationRatio: CGFloat = 0.3
     
     /// An array of root view controllers that will be presented.
-    public var viewControllers          : [UIViewController] = []
+    public var viewControllers: [UIViewController] = []
+    
+    /// Color to dim front view controller. Default is clearColor.
+    public var dimColor: UIColor = UIColor.clear {
+        didSet {
+            invisibleFrontView.backgroundColor = dimColor
+        }
+    }
     
     // MARK: - Private Properties
     
@@ -76,8 +83,9 @@ public class SideMenuController: UIViewController {
         invisibleFrontView.frame = frontContainerView.bounds
         invisibleFrontView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTapGestureRecognizer(_:))))
         invisibleFrontView.addGestureRecognizer(invisibleViewPanGestureRecognizer)
-        frontContainerView.addSubview(invisibleFrontView)
         invisibleFrontView.alpha = 0
+        invisibleFrontView.backgroundColor = dimColor
+        frontContainerView.addSubview(invisibleFrontView)
         
         // Gesture Recognizer Targets
         frontViewPanGestureRecognizer.addTarget(self, action: #selector(self.handlePanGestureRecognizer(_:)))
@@ -205,12 +213,15 @@ public class SideMenuController: UIViewController {
         frontViewPanGestureRecognizer.isEnabled = true
         invisibleViewPanGestureRecognizer.isEnabled = true
         
+        
         menuContainerView.frame     = view.bounds
         frontContainerView.frame    = view.bounds
         menuView?.frame             = view.bounds
         frontView?.frame            = view.bounds
         invisibleFrontView.frame    = view.bounds
         isMenuShown                 = false
+        print(view.bounds)
+        print(invisibleFrontView.frame)
     }
     
 }
@@ -282,7 +293,7 @@ public extension UIViewController {
         guard let sideMenuController = parent as? SideMenuController else {
             return parent?.sideMenuController
         }
-        
+
         return sideMenuController
     }
     
