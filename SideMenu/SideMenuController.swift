@@ -33,39 +33,39 @@ public class SideMenuController: UIViewController {
     
     // MARK: - Private Properties
     
-    fileprivate let menuContainerViewController : UIViewController
+    fileprivate let menuContainerViewController: UIViewController
     fileprivate let frontContainerViewController: UIViewController
     
-    fileprivate var menuContainerView   : UIView { return menuContainerViewController.view }
-    fileprivate var frontContainerView  : UIView { return frontContainerViewController.view }
-    fileprivate let invisibleFrontView  : UIView
+    fileprivate var menuContainerView: UIView { return menuContainerViewController.view }
+    fileprivate var frontContainerView: UIView { return frontContainerViewController.view }
+    fileprivate let invisibleFrontView: UIView
     
-    fileprivate var menuViewController  : UIViewController?
-    fileprivate var frontViewController : UIViewController?
+    fileprivate var menuViewController: UIViewController?
+    fileprivate var frontViewController: UIViewController?
     
-    fileprivate var menuView    : UIView? { return menuViewController?.view }
-    fileprivate var frontView   : UIView? { return frontViewController?.view }
+    fileprivate var menuView: UIView? { return menuViewController?.view }
+    fileprivate var frontView: UIView? { return frontViewController?.view }
     
     fileprivate var isMenuShown = false
     
     fileprivate var frontContainerViewFrameBeforePanning: CGRect?
     
-    fileprivate let frontViewPanGestureRecognizer       : UIPanGestureRecognizer
-    fileprivate let invisibleViewPanGestureRecognizer   : UIPanGestureRecognizer
+    fileprivate let frontViewPanGestureRecognizer: UIPanGestureRecognizer
+    fileprivate let invisibleViewPanGestureRecognizer: UIPanGestureRecognizer
     
     // MARK: - Lifecycle
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         // Containers
-        menuContainerViewController     = UIViewController()
-        frontContainerViewController    = UIViewController()
+        menuContainerViewController = UIViewController()
+        frontContainerViewController = UIViewController()
         
         // Views
         invisibleFrontView = UIView()
         
         // Gesture Recognizers
-        frontViewPanGestureRecognizer       = UIPanGestureRecognizer()
-        invisibleViewPanGestureRecognizer   = UIPanGestureRecognizer()
+        frontViewPanGestureRecognizer = UIPanGestureRecognizer()
+        invisibleViewPanGestureRecognizer = UIPanGestureRecognizer()
         
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
@@ -132,7 +132,9 @@ public class SideMenuController: UIViewController {
     /// - parameter animated: Is animated.
     public func toggleMenu(on: Bool, animated: Bool) {
         isMenuShown = on
-        invisibleFrontView.alpha = on ? 1 : 0
+        UIView.animate(withDuration: 0.2, animations: {
+            self.invisibleFrontView.alpha = on ? 1 : 0
+        })
         updateFrontContainerViewFrame(animated: animated)
     }
     
@@ -213,15 +215,15 @@ public class SideMenuController: UIViewController {
         frontViewPanGestureRecognizer.isEnabled = true
         invisibleViewPanGestureRecognizer.isEnabled = true
         
-        
-        menuContainerView.frame     = view.bounds
-        frontContainerView.frame    = view.bounds
-        menuView?.frame             = view.bounds
-        frontView?.frame            = view.bounds
-        invisibleFrontView.frame    = view.bounds
-        isMenuShown                 = false
-        print(view.bounds)
-        print(invisibleFrontView.frame)
+        coordinator.animate(alongsideTransition: { context in
+            self.menuContainerView.frame = self.view.bounds
+            self.frontContainerView.frame = self.view.bounds
+            self.menuView?.frame = self.view.bounds
+            self.frontView?.frame = self.view.bounds
+            self.invisibleFrontView.frame = self.view.bounds
+        }, completion: { _ in
+            self.toggleMenu(on: false, animated: false)
+        })
     }
     
 }
@@ -262,6 +264,8 @@ extension SideMenuController {
             origin: newFrontContainerViewOrigin,
             size: frontContainerViewFrameBeforePanning.size
         )
+        
+        invisibleFrontView.alpha = frontContainerView.frame.origin.x / (view.frame.width * menuWidthRatio)
     }
     
     private func panGestureEnded(_ gr: UIPanGestureRecognizer) {
