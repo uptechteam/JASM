@@ -19,6 +19,10 @@ class MenuExampleViewController: UIViewController {
         tableView.delegate   = self
         tableView.dataSource = self
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
 }
 

@@ -96,6 +96,20 @@ public class SideMenuController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Appearance
+    
+    public override var preferredStatusBarStyle: UIStatusBarStyle {
+        if isMenuShown {
+            return menuViewController?.preferredStatusBarStyle ?? .default
+        } else {
+            return frontViewController?.preferredStatusBarStyle ?? .default
+        }
+    }
+    
+    public override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .fade
+    }
+    
     // MARK: - Inputs
     
     /// Method to set view controller as menu view controller.
@@ -178,6 +192,7 @@ public class SideMenuController: UIViewController {
             CGRect(x: view.frame.width * menuWidthRatio, y: 0, width: view.frame.width, height: view.frame.height)
         
         let animate = {
+            self.setNeedsStatusBarAppearanceUpdate()
             self.frontContainerView.frame = frontContainerViewFrame
         }
         

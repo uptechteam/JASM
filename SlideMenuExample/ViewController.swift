@@ -18,6 +18,10 @@ class ViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Menu", style: .plain, target: self, action: #selector(handleBarButtonPressed(_:)))
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     // MARK: - User Interaction
     
     func handleBarButtonPressed(_ barButtonItem: UIBarButtonItem) {
