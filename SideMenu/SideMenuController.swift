@@ -31,6 +31,13 @@ public class SideMenuController: UIViewController {
         }
     }
     
+    /// If pan gesture to open menu enabled.
+    public var isPanGestureEnabled = true {
+        didSet {
+            frontViewPanGestureRecognizer.isEnabled = isPanGestureEnabled
+        }
+    }
+    
     // MARK: - Private Properties
     
     fileprivate let menuContainerViewController: UIViewController

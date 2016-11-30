@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let sideMenuController = SideMenuController()
         sideMenuController.dimColor = UIColor.white.withAlphaComponent(0.7)
+        sideMenuController.isPanGestureEnabled = false
         let menuExampleViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()! as! MenuExampleViewController
         sideMenuController.set(menuViewController: menuExampleViewController)
         
